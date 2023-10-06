@@ -10,4 +10,4 @@ const redisClient = () => {
     throw new Error('Redis not connected')
 }
 
-export default redisClient;
+export const redis =  new Redis(redisClient());
