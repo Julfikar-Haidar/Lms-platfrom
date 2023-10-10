@@ -10,7 +10,6 @@ cloudinary.config({
   api_key: "383196137162598",
   api_secret: "SrVw04XJs5KLZLcv_zXB90X9Ung",
 });
-
 // create server
 
 app.listen(process.env.PORT, () => {

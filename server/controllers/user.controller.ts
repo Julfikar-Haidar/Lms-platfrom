@@ -356,25 +356,26 @@ export const updateProfilePicture = CatchAsynchError(
       if (avatar && user) {
         // if user have one avatar then call if
         if (user?.avatar?.public_id) {
-          console.log("359");
-
           // first delete old image
           await cloudinary.v2.uploader.destroy(user?.avatar?.public_id);
 
           const myCloud = await cloudinary.v2.uploader.upload(avatar, {
             folder: "avatars",
             width: 150,
+            timeout: 90000,
           });
           user.avatar = {
             public_id: myCloud.public_id,
             url: myCloud.secure_url,
           };
         } else {
+          console.log("379");
           const myCloud = await cloudinary.v2.uploader.upload(avatar, {
             folder: "avatars",
             width: 150,
+            timeout: 90000,
           });
-          console.log("379", myCloud);
+
           user.avatar = {
             public_id: myCloud.public_id,
             url: myCloud.secure_url,
