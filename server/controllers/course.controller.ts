@@ -248,7 +248,7 @@ export const addAnswer = CatchAsynchError(
           title: courseContent.title,
         };
 
-        const html = ejs.renderFile(
+        const html = await ejs.renderFile(
           path.join(__dirname, "../mails/question-reply.ejs"),
           data
         );
@@ -263,6 +263,71 @@ export const addAnswer = CatchAsynchError(
           return next(new ErrorHandler(error.message, 500));
         }
       }
+
+      res.status(200).json({
+        success: true,
+        course,
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+// add a review
+interface IAddReviewData {
+  review: string;
+  rating: number;
+  userId: string;
+}
+
+export const addReview = CatchAsynchError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userCourseList = req.user?.courses;
+
+      const courseId = req.params.id;
+      console.log("290", courseId.toString());
+
+      // check if courseId already exits in userCourseList based on _id
+      const courseExits = userCourseList?.some(
+        (course: any) => course._id.toString() === courseId.toString()
+      );
+      console.log("296", courseExits);
+
+      if (!courseExits) {
+        return next(
+          new ErrorHandler("You are not eligible to access this course", 400)
+        );
+      }
+
+      const course = await CourseModel.findById(courseId);
+
+      const { review, rating } = req.body as IAddReviewData;
+
+      const reviewData: any = {
+        user: req.user,
+        rating,
+        comment: review,
+      };
+
+      course?.reviews.push(reviewData);
+
+      let avg = 0;
+      course?.reviews.forEach((rev: any) => {
+        avg += rev.rating;
+      });
+
+      if (course) {
+        course.ratings = avg / course?.reviews.length;
+      }
+
+      await course?.save();
+
+      const notification = {
+        title: "New Review Recived",
+        message: `${req.user?.name} has given a review on your course in ${course?.name}`,
+      };
 
       res.status(200).json({
         success: true,
