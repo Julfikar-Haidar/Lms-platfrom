@@ -338,3 +338,49 @@ export const addReview = CatchAsynchError(
     }
   }
 );
+
+// add review reply ony admin
+interface IAddReviewReplayData {
+  comment: string;
+  courseId: string;
+  reviewId: string;
+}
+
+export const addReplyToReview = CatchAsynchError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { comment, courseId, reviewId } = req.body as IAddReviewReplayData;
+      const course = await CourseModel.findById(courseId);
+      if (!course) {
+        return next(new ErrorHandler("Course not found", 404));
+      }
+
+      const review = course?.reviews?.find(
+        (rev: any) => rev._id.toString() === reviewId
+      );
+      if (!review) {
+        return next(new ErrorHandler("Review not found", 404));
+      }
+
+      const reviewReply: any = {
+        user: req.user,
+        comment,
+      };
+
+      if (!review.commentReplies) {
+        review.commentReplies = [];
+      }
+
+      review.commentReplies?.push(reviewReply);
+
+      await course?.save();
+
+      res.status(200).json({
+        success: true,
+        course,
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
