@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.2em;
+        }
+
+        p {
+            font-size: 1em;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f7f7f7;
+            border: 1px solid #ddd;
+        }
+
+        ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        ol li {
+            margin: 10px 0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Course Order Confirmation</h1>
+        <p>Thank you for your course order!</p>
+
+        <h2>Order Details</h2>
+        <p><strong>Course Title:</strong>
+            <%=order.name%>
+        </p>
+        <p><strong>Order ID:</strong>
+            <%=order._id%>
+        </p>
+        <p><strong>Order Date:</strong>
+            <%=order.date%>
+        </p>
+        <p><strong>Order Total:</strong>
+            $<%=order.price%>
+        </p>
+
+        <h2>Course Information</h2>
+        <p><strong>Instructor:</strong> [Instructor Name]</p>
+        <p><strong>Course Start Date:</strong> [Start Date]</p>
+        <p><strong>Course Duration:</strong> [Duration]</p>
+
+        <h2>Accessing Your Course</h2>
+        <p>Your course is now available. Here's how you can access it:</p>
+        <ol>
+            <li>Log in to your account on our website.</li>
+            <li>Go to your course dashboard.</li>
+            <li>You'll find your purchased course under "My Courses."</li>
+            <li>Click on the course to start learning.</li>
+        </ol>
+
+        <h2>Need Help?</h2>
+        <p>If you have any questions or encounter any issues, please don't hesitate to contact our support team at
+            julfikar6262@gmail.com or 01766921701 . We're here to assist you.</p>
+
+        <p>Thank you for choosing Lms Platform for your learning needs. We wish you a successful and enjoyable
+            learning experience!</p>
+
+        <footer>
+            Sincerely, Dream99
+        </footer>
+    </div>
+</body>
+
+</html>
