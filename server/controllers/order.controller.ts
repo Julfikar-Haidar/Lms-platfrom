@@ -5,7 +5,7 @@ import ErrorHandler from "../utils/ErrorHandler";
 import { IOrder } from "../models/orderModels";
 import userModel from "../models/user.model";
 import CourseModel from "../models/course.module";
-import { newOrder } from "../services/order.service";
+import { getAllOrderService, newOrder } from "../services/order.service";
 import path from "path";
 import sendMail from "../utils/sendMail";
 import NotificationModel from "../models/notificationModels";
@@ -91,6 +91,17 @@ export const createOrder = CatchAsynchError(
       newOrder(data, res, next);
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
+// get all order
+export const getAllOrder = CatchAsynchError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      getAllOrderService(res);
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
     }
   }
 );

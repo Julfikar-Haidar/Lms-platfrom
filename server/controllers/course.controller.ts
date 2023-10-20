@@ -3,13 +3,14 @@ import { Request, Response, NextFunction } from "express";
 import cloudinary from "cloudinary";
 import { CatchAsynchError } from "../middleware/catchAsyncError";
 import ErrorHandler from "../utils/ErrorHandler";
-import { createCourse } from "../services/course.service";
+import { createCourse, getAllCourseService } from "../services/course.service";
 import CourseModel from "../models/course.module";
 import { redis } from "../utils/redis";
 import { log } from "console";
 import mongoose from "mongoose";
 import path from "path";
 import sendMail from "../utils/sendMail";
+import NotificationModel from "../models/notificationModels";
 
 // upload course
 export const uploadCourse = CatchAsynchError(
@@ -188,6 +189,13 @@ export const addQuestion = CatchAsynchError(
       };
       // add this question to our course content
       courseContent.questions.push(newQuestion);
+
+      await NotificationModel.create({
+        user: req.user?._id,
+        title: "New Question Received",
+        message: `You have a new question in ${courseContent?.title}`,
+      });
+
       // save the updated course
       await course?.save();
 
@@ -242,6 +250,11 @@ export const addAnswer = CatchAsynchError(
       // create a notification
       if (req.user?._id === question.user._id) {
         // create a notification
+        await NotificationModel.create({
+          user: req.user?._id,
+          title: "New Question Reply",
+          message: `You have a new question reply in ${courseContent?.title}`,
+        });
       } else {
         const data = {
           name: question.user.name,
@@ -379,6 +392,17 @@ export const addReplyToReview = CatchAsynchError(
         success: true,
         course,
       });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+// get all courses
+export const getAllCourses = CatchAsynchError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      getAllCourseService(res);
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }

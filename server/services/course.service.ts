@@ -12,3 +12,13 @@ export const createCourse = CatchAsynchError(
     });
   }
 );
+
+// get all courses
+export const getAllCourseService = async (res: Response) => {
+  const course = await CourseModel.find().sort({ createdAt: -1 });
+
+  res.status(200).json({
+    success: true,
+    course,
+  });
+};
