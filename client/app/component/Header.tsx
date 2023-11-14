@@ -40,8 +40,10 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
         });
       }
     }
-    if (isSuccess) {
-      toast.success("Login Successfully");
+    if (data === null) {
+      if (isSuccess) {
+        toast.success("Login Successfully");
+      }
     }
   }, [data, user]);
 
